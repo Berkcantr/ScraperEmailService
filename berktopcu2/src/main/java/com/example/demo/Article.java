@@ -10,12 +10,6 @@ public class Article {
 		this.header = header;
 		this.content = content;
 	}
-	//https://www.youtube.com/watch?v=OxyBRjGfJsk
-	//https://www.youtube.com/watch?v=XpMXAxDN7mY
-	//To Do: Connect mongodb with app, have it launch successfully
-	//ignore tutorial (outdated) do jwt yourself
-	//use github repo masis sent as advice, look
-	//through it with gpt to tailor to this service
 	
 	public String getUrl() {
 		return url;
