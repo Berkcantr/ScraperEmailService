@@ -14,12 +14,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.example.demo.models.UserRepository;
+import com.example.demo.utils.JwtFilterRequest;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+	@Autowired
+	private JwtFilterRequest jwtFilterRequest;
+	
     private final UserRepository userRepository;
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
@@ -35,8 +41,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/subs", "/auth").permitAll() 
                 .anyRequest().authenticated()
             )
-            .authenticationProvider(authenticationProvider());
-
+            .authenticationProvider(authenticationProvider())
+        .addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -64,4 +70,5 @@ public class SecurityConfiguration {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
+
 
