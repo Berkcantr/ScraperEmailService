@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
+import javax.crypto.SecretKey;
 
 @Component
 public class JwtUtils {
 
 	
-	private static final String SECRET_KEY = "secret";
+	private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
@@ -32,7 +35,7 @@ public class JwtUtils {
 		Date now = new Date(System.currentTimeMillis());
 		Date until = new Date(System.currentTimeMillis() + 1000 * 80 * 40 * 20);
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now).setExpiration(until)
-				.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+				.signWith(SECRET_KEY).compact();
 	}
 	
 	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
