@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berk's Newsletter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f4; /* Light greenish background */
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #4CAF50, #a5d6a7); /* Green gradient */
+            padding: 15px 20px;
+        }
+        .logo {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .nav-links {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-links button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .nav-links button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .logout {
+            background-color: #d32f2f; /* Red for logout */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .logout:hover {
+            background-color: #b71c1c; /* Darker red on hover */
+        }
+        .settings {
+        	background-color: #bfbfbf;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .settings:hover {
+        	background-color: #a3a2a2;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">YourLogo</div>
+    <div class="nav-links">
+        <button>Finance</button>
+        <button>Health</button>
+        <button>Sports</button>
+        <button>Technology</button>
+        <button>Blogs</button>
+        <button>World News</button>
+    </div>
+    <button class="settings">Settings</button>
+    <button class="logout">Log Out</button>
+</nav>
+<script>
+const jwtToken = sessionStorage.getItem('jwtToken');  // Retrieve the token from sessionStorage
+
+if (!jwtToken) {
+    alert("Unauthorized access, please login.");
+    window.location.href = "/login.html";
+} else {
+    // Validate the token with the backend
+    fetch("http://localhost:8080/vald", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`  // Send the token to the validation endpoint
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // If token is valid, allow access to the page
+            alert(`Token is valid: ${jwtToken}`);
+            // Proceed with loading the homepage content if needed
+        } else {
+            // If token is invalid, redirect to login page
+            alert("Invalid token, please login again.");
+            window.location.href = "/login.html";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred, please login again.");
+        window.location.href = "/login.html";
+    });
+}
+
+</script>
+
+
+
+
+</body>
+</html>
