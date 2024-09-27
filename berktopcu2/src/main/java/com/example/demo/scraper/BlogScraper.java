@@ -8,7 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.demo.Article;
+import com.example.demo.enums.Interest;
+import com.example.demo.models.ArticleModel;
 
 public class BlogScraper {
 
@@ -42,23 +43,24 @@ public class BlogScraper {
 
     
     //print news. If statements go here:
-    private static void scrapeArticle(String url) {
-        try {
-            Document articleDocument = Jsoup.connect(url).get();
-            
-            Elements article = articleDocument.select(".col-md-8");
-            
-            String header = article.select("h1.entry-title").text();
-            String content = article.select("h2.spot").text();
-            
-            Elements paragraphs = article.select("p");
-            StringBuilder fullContent = new StringBuilder();
-            for (Element p : paragraphs) {
-                fullContent.append(p.text()).append("\n");
-            }
-            
-            Article article1 = new Article(url, header, fullContent.toString().trim());
-            System.out.println(article1.toString());
+	    private static void scrapeArticle(String url) {
+	        try {
+	            Document articleDocument = Jsoup.connect(url).get();
+	            
+	            Elements article = articleDocument.select(".col-md-8");
+	            
+	            String header = article.select("h1.entry-title").text();
+	            String content = article.select("h2.spot").text();
+	            
+	            Elements paragraphs = article.select("p");
+	            StringBuilder fullContent = new StringBuilder();
+	            for (Element p : paragraphs) {
+	                fullContent.append(p.text()).append("\n");
+	            }
+	            
+	            
+				ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.BLOGS, null);
+	            System.out.println(article1.toString());
             
             System.out.println("////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////");
             

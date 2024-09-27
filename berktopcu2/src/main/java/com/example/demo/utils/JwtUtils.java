@@ -33,7 +33,7 @@ public class JwtUtils {
 	
 	private String createToken(Map<String, Object> claims, String subject) {
 		Date now = new Date(System.currentTimeMillis());
-		Date until = new Date(System.currentTimeMillis() + 10 * 60 * 1000);  // change the time with the numbers here
+		Date until = new Date(System.currentTimeMillis() + 1 * 60 * 1000);  // change the time with the numbers here
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now).setExpiration(until)
 				.signWith(SECRET_KEY).compact();
 	}
@@ -60,13 +60,7 @@ public class JwtUtils {
 	}
 	/* 
 	 * 
-	 * 
-	 * Either kill token when user logs out, and/or clear sessionStorage.
-	 * If you dont kill token, if they access it after log out, they can reuse it.
-	 * token lasts 10 min long so should not be an issue but structure wise is beter to kill.
-	 * 
-	 * As for edit, use email in sessionStorage to sent the PUT request and it should stop
-	 * any user from editing any other user in the           ------ DO FIRST VERY EASY
+	 * fix login logic to prevent false succesful login only to be returned to login from homepage
 	 * 
 	 * Start on the article DB table, how they are displayed on the homepage, 
 	 * 

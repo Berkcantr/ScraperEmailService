@@ -25,20 +25,14 @@ public class UserModel implements UserDetails {
     
     /*
      * 
-     * +++When the user fills out the form and clicks "Sign Up," it sends a POST request to /submit-signup. You can handle this in your Spring Boot controller by mapping this path.
      * 
+     *
      * 
-     * keep users hashed passwords instead of the real thing. ----later
+     * store news articles in mongodb
      * 
-     * store news articles in elastic search ---- NOW
-     * 
-     * Index.html is working for the most part, get signup and login working, then have
-     * login page auth users instead thorough postman. Once done, create 
-     * a home page that displays the news as text  ---- HTML is done, POST action needs logic
      *																														
      * Create the remaining scrapers and create homepage
      * 
-     * create email service
      * 
      * create tests
      */

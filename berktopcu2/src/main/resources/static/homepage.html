@@ -62,31 +62,86 @@
         .settings:hover {
         	background-color: #a3a2a2;
         }
+		.card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjusts to 3 cards per row on larger screens */
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s ease-in-out;
+        max-width: 100%; /* Ensures card takes up full width in its grid column */
+    }
+
+    .card:hover {
+        transform: translateY(-10px); /* Adds a lift effect on hover */
+    }
+
+    .card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-bottom: 2px solid #4CAF50;
+    }
+
+    .card h3 {
+        padding: 15px;
+        font-size: 1.2em;
+        color: #333;
+        text-align: center;
+    }
+
+    .card a {
+        display: block;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 0 0 10px 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .card a:hover {
+        background-color: #388E3C; /* Darker green on hover */
+    }
+
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">YourLogo</div>
+    <div class="logo">Berk's Newsletter</div>
     <div class="nav-links">
-        <button>Finance</button>
-        <button>Health</button>
-        <button>Sports</button>
-        <button>Technology</button>
-        <button>Blogs</button>
-        <button>World News</button>
+        <button onclick="fetchArticles()">All</button>
+        <button onclick="financeBtn()">Finance</button>
+        <button onclick="healthBtn()">Health</button>
+        <button onclick="sportsBtn()">Sports</button>
+        <button onclick="techBtn()">Technology</button>
+        <button onclick="blogsBtn()">Blogs</button>
+        <button onclick="wrldNewsBtn()">World News</button>
     </div>
-    <button class="settings">Settings</button>
-    <button class="logout">Log Out</button>
+    <button class="settings" onclick="goToSettings()">Settings</button>
+    <button class="logout" onclick="logout()">Log Out</button>
 </nav>
+
+
+<div id="article-container" class="card-container"></div>
+
+
 <script>
-const jwtToken = sessionStorage.getItem('jwtToken');  // Retrieve the token from sessionStorage
+const jwtToken = sessionStorage.getItem('jwtToken');
 
 if (!jwtToken) {
     alert("Unauthorized access, please login.");
     window.location.href = "/login.html";
 } else {
-    // Validate the token with the backend
     fetch("http://localhost:8080/vald", {
         method: "GET",
         headers: {
@@ -96,7 +151,7 @@ if (!jwtToken) {
     .then(response => {
         if (response.ok) {
             // If token is valid, allow access to the page
-            alert(`Token is valid: ${jwtToken}`);
+            //alert(`Token is valid: ${jwtToken}`);
             // Proceed with loading the homepage content if needed
         } else {
             // If token is invalid, redirect to login page
@@ -111,10 +166,329 @@ if (!jwtToken) {
     });
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    fetchArticles();
+});
+
+
+function fetchArticles() {
+    fetch("http://localhost:8080/articles/list", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = ''; // Clear any existing content
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header; // Title only
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+////////////////////////////////
+function financeBtn() {
+fetch("http://localhost:8080/articles/category/FINANCE", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+/////////////////////////////////////////////////////////
+
+function sportsBtn() {
+fetch("http://localhost:8080/articles/category/SPORTS", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+/////////////////////////////////////////////////////////
+function techBtn() {
+fetch("http://localhost:8080/articles/category/TECHNOLOGY", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+/////////////////////////////////
+function wrldNewsBtn() {
+fetch("http://localhost:8080/articles/category/WORLD_NEWS", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+/////////////////////////////////////////////////
+function healthBtn() {
+fetch("http://localhost:8080/articles/category/HEALTH", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+                
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+//////////////////////////////////
+function blogsBtn() {
+fetch("http://localhost:8080/articles/category/BLOGS", {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('article-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No articles found.</p>';
+        }
+
+        data.forEach(article => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            // Only image and title now
+            if (article.image) {
+                const image = document.createElement('img');
+                image.src = article.image;
+                image.alt = article.header;
+                card.appendChild(image);
+            }
+
+            const title = document.createElement('h3');
+            title.textContent = article.header;
+            card.appendChild(title);
+
+                const link = document.createElement('a');
+                link.href = `content.html?url=${encodeURIComponent(article.url)}`; // Add article URL as query parameter
+                link.textContent = "Read more";
+                link.target = "_self"; // Open in the same tab
+                card.appendChild(link);
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching articles:", error);
+    });
+}
+
+
+function clearArticles() {
+    const container = document.getElementById('article-container');
+    container.innerHTML = '';
+}
+
+function logout() {
+    sessionStorage.clear(); 
+    window.location.href = "/login.html";
+}
+
+function goToSettings() {
+    window.location.href = "/edit.html";
+}
+
+
 </script>
-
-
-
-
 </body>
 </html>

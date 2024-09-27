@@ -8,7 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.demo.Article;
+import com.example.demo.enums.Interest;
+import com.example.demo.models.ArticleModel;
 
 
 public class TechnologyScraper {
@@ -52,7 +53,7 @@ public class TechnologyScraper {
                 fullContent.append(p.text()).append("\n");
             }
             
-            Article article1 = new Article(url, header, fullContent.toString().trim());
+            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.TECHNOLOGY);
             System.out.println(article1.toString());
             
             System.out.println("////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////");

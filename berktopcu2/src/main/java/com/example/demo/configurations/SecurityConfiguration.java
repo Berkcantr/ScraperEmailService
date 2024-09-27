@@ -79,7 +79,7 @@ public class SecurityConfiguration {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth", "/subs", "/login.html", "/signup.html", "/index.html", "/homepage.html", "/edit**", "/css/**", "/js/**").permitAll()  // Allow login/signup resources
+                .requestMatchers("/auth", "/subs", "/articles/**", "/login.html", "/signup.html", "/index.html", "/homepage.html", "/content.html", "/edit**", "/css/**", "/js/**").permitAll()  // Allow login/signup resources
                 //.requestMatchers("/homepage.html").authenticated()  // Restrict homepage to authenticated users
                 .anyRequest().authenticated()
             )

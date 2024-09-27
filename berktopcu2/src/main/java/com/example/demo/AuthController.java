@@ -49,7 +49,6 @@ public class AuthController {
 		String username = authenticationRequest.getUsername();
 		String password = authenticationRequest.getPassword();
 		int age = authenticationRequest.getAge();
-		//Interest interest = authenticationRequest.getInterest();
 		List<Interest> interests = authenticationRequest.getInterests();
 		
 		UserModel userModel = new UserModel();
@@ -97,9 +96,11 @@ public class AuthController {
 		
 		return ResponseEntity.ok(new AuthenticationResponse("Successful authentication using " + generatedToken));
 	}
-	/*
-	 * get token and check its validity whenever a user goes to a new page. If not expired, renew token, if expired,
-	 * take user to login.html
+	
+	/*Insert vald service ontop of every html, making sure to check token validity each time user takes
+	 * an action on the website. Look into extending lifetime of a token for each action
+	 * done while token is still valid.
+	 * 
 	 */
 	
 	@GetMapping("/vald")
@@ -122,48 +123,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token");
         }
     }
-	
-	
-	
-	
-	
-	
-	/* Not needed anymore due to js using /auth and /subs directly from db.
-	 * Keep in mind for articles objects.
-	 * 
-	 * 
-	@PostMapping("/submit-signup")
-	public ResponseEntity<?> submitSignup(@RequestBody AuthenticationRequest authenticationRequest) {
-	    String username = authenticationRequest.getUsername();
-	    String password = authenticationRequest.getPassword();
-	    int age = authenticationRequest.getAge();
-	    List<Interest> interests = authenticationRequest.getInterests();
-
-	    // Check if user already exists by username
-	    UserModel existingUser = userRepository.findByUsername(username);
-	    
-	    if (existingUser != null) {
-	        // User already exists
-	        return ResponseEntity.status(HttpStatus.CONFLICT)
-	                             .body(new AuthenticationResponse("Signup unsuccessful: Username already taken"));
-	    }
-
-	    // Create a new user
-	    UserModel newUser = new UserModel();
-	    newUser.setUsername(username);
-	    newUser.setPassword(password);
-	    newUser.setAge(age);
-	    newUser.setInterests(interests);
-	    
-	    try {
-			userRepository.save(newUser);
-		}
-		catch(Exception e) {
-			System.out.println("Error to MongoDB: " + newUser);
-			return ResponseEntity.ok(new AuthenticationResponse("Error occured for " + username));
-			
-		}
-	    System.out.println("Saving user to MongoDB: " + newUser);
-		return ResponseEntity.ok(new AuthenticationResponse("Successful Subscription for " + username));
-	}
-*/}
+}

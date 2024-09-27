@@ -14,6 +14,57 @@
             height: 100vh;
             margin: 0;
         }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #4CAF50, #a5d6a7); /* Green gradient */
+            padding: 15px 20px;
+        }
+         .logo {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .nav-links {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-links button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .nav-links button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .logout {
+            background-color: #d32f2f; /* Red for logout */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .logout:hover {
+            background-color: #b71c1c; /* Darker red on hover */
+        }
+        .settings {
+        	background-color: #bfbfbf;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .settings:hover {
+        	background-color: #a3a2a2;
+        }
 
         .container {
             background-color: #fff;
@@ -69,6 +120,8 @@
     </style>
 </head>
 <body>
+
+
     <div class="container">
         <h1>Edit User</h1>
         <form id="edit-form">
@@ -96,10 +149,44 @@
             </div>
 
             <button type="submit">Update User</button>
+            <button class="settings" onclick="goToHome()">Cancel</button>
         </form>
     </div>
 
 <script>
+const jwtToken = sessionStorage.getItem('jwtToken');
+
+if (!jwtToken) {
+    alert("Unauthorized access, please login.");
+    window.location.href = "/login.html";
+} else {
+    fetch("http://localhost:8080/vald", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`  // Send the token to the validation endpoint
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // If token is valid, allow access to the page
+            //alert(`Token is valid: ${jwtToken}`);
+            // Proceed with loading the homepage content if needed
+        } else {
+            // If token is invalid, redirect to login page
+            alert("Invalid token, please login again.");
+            window.location.href = "/login.html";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred, please login again.");
+        window.location.href = "/login.html";
+    });
+}
+
+
+
+
     document.getElementById("edit-form").addEventListener("submit", function(event) {
         event.preventDefault();
 
@@ -118,30 +205,34 @@
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${sessionStorage.getItem('token')}` // Add the JWT token here
+                "Authorization": `Bearer ${sessionStorage.getItem('jwtToken')}`
             },
             body: JSON.stringify(userData),
             redirect: "follow"
         };
 
-        const username = sessionStorage.getItem('username'); // Retrieve the username from sessionStorage
+        const username = sessionStorage.getItem('username');
 
         fetch(`http://localhost:8080/edit?username=${encodeURIComponent(username)}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json(); // parse JSON response
+                return response.json();
             })
             .then((result) => {
                 alert("User updated successfully!");
-                window.location.href = "/login.html"; // redirect after success
+                window.location.href = "/homepage.html";
             })
             .catch((error) => {
                 console.error("Error:", error);
                 alert("Update failed.");
             });
     });
+    
+function goToHome() {
+	window.location.href = "/homepage.html";
+}
 </script>
 
 </body>
