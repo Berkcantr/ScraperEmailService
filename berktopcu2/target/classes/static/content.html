@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berk's Newsletter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f4; /* Light greenish background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #4CAF50, #a5d6a7); /* Green gradient */
+            padding: 15px 20px;
+            width: 100%; /* Ensure nav takes full width */
+            position: fixed; /* Fixed position for nav */
+            top: 0;
+            z-index: 1000; /* Keep nav above other content */
+        }
+        .logo {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .nav-links {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-links button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .nav-links button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .logout {
+            background-color: #d32f2f; /* Red for logout */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .logout:hover {
+            background-color: #b71c1c; /* Darker red on hover */
+        }
+        .settings {
+            background-color: #bfbfbf;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .settings:hover {
+            background-color: #a3a2a2;
+        }
+        .content {
+            margin-top: 80px; /* Space below the fixed nav */
+            text-align: center; /* Center content */
+            padding: 20px;
+            max-width: 900px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center; /* Center the image horizontally */
+            max-width: 800px; /* Limit image size */
+            margin: 0 auto; /* Center the container itself */
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px; /* Rounded corners */
+        }
+        h1 {
+            margin: 20px 0 10px;
+            font-size: 2em;
+            color: #333;
+        }
+        p {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.5; /* Improved readability */
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="logo">Berk's Newsletter</div>
+    <div class="nav-links">
+        <button onclick="goToHome()">Return Home</button>
+    </div>
+    <button class="settings" onclick="goToSettings()">Settings</button>
+    <button class="logout" onclick="logout()">Log Out</button>
+</nav>
+
+<div class="content">
+    <div class="image-container">
+        <img id="article-image" src="https://via.placeholder.com/800x400" alt="Article Image">
+    </div>
+    <h1 id="article-header">Loading Article...</h1>
+    <p id="article-content">Please wait while we load the article content.</p>
+</div>
+
+<script>
+const jwtToken = sessionStorage.getItem('jwtToken');
+
+if (!jwtToken) {
+    alert("Unauthorized access, please login.");
+    window.location.href = "/login.html";
+} else {
+    fetch("http://localhost:8080/vald", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`  // Send the token to the validation endpoint
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // If token is valid, allow access to the page
+            //alert(`Token is valid: ${jwtToken}`);
+            // Proceed with loading the homepage content if needed
+        } else {
+            // If token is invalid, redirect to login page
+            alert("Invalid token, please login again.");
+            window.location.href = "/login.html";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred, please login again.");
+        window.location.href = "/login.html";
+    });
+}
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const articleUrl = urlParams.get('url');
+
+if (articleUrl) {
+    fetch(`http://localhost:8080/articles/content?url=${encodeURIComponent(articleUrl)}`)
+        .then(response => response.json())
+        .then(article => {
+            document.getElementById('article-header').textContent = article.header;
+            document.getElementById('article-content').textContent = article.content;
+            if (article.image) {
+                document.getElementById('article-image').src = article.image;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching article:', error);
+            document.getElementById('article-header').textContent = 'Error loading article';
+            document.getElementById('article-content').textContent = 'Sorry, we could not load the article. Please try again later.';
+        });
+} else {
+    document.getElementById('article-header').textContent = 'Article not found';
+    document.getElementById('article-content').textContent = 'Sorry, we couldn\'t find the article you were looking for.';
+}
+
+function goToHome() {
+	window.location.href = "/homepage.html";
+}
+
+function logout() {
+    sessionStorage.clear(); 
+    window.location.href = "/login.html";
+}
+
+function goToSettings() {
+    window.location.href = "/edit.html";
+}
+</script>
+
+</body>
+</html>

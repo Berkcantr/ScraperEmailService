@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #4CAF50, #a5d6a7); /* Green gradient */
+            padding: 15px 20px;
+        }
+         .logo {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .nav-links {
+            flex: 1;
+            text-align: center;
+        }
+        .nav-links button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .nav-links button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .logout {
+            background-color: #d32f2f; /* Red for logout */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .logout:hover {
+            background-color: #b71c1c; /* Darker red on hover */
+        }
+        .settings {
+        	background-color: #bfbfbf;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .settings:hover {
+        	background-color: #a3a2a2;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="email"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .interests {
+            margin-bottom: 20px;
+        }
+
+        .interests label {
+            margin-right: 10px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+        <h1>Edit User</h1>
+        <form id="edit-form">
+
+            <label for="password">New Password:</label>
+            <input type="password" id="password" required>
+
+            <label for="age">New Age:</label>
+            <input type="number" id="age" required>
+
+            <div class="interests">
+                <label>Select new interests:</label><br>
+                <input type="checkbox" id="sports" value="SPORTS">
+                <label for="sports">Sports</label>
+                <input type="checkbox" id="finance" value="FINANCE">
+                <label for="finance">Finance</label>
+                <input type="checkbox" id="tech" value="TECHNOLOGY">
+                <label for="tech">Technology</label>
+                <input type="checkbox" id="health" value="HEALTH">
+                <label for="health">Health</label>
+                <input type="checkbox" id="worldnews" value="WORLD_NEWS">
+                <label for="worldnews">World News</label>
+                <input type="checkbox" id="blog" value="BLOGS">
+                <label for="blog">Blogs</label>
+            </div>
+
+            <button type="submit">Update User</button>
+            <button class="settings" onclick="goToHome()">Cancel</button>
+        </form>
+    </div>
+
+<script>
+const jwtToken = sessionStorage.getItem('jwtToken');
+
+if (!jwtToken) {
+    alert("Unauthorized access, please login.");
+    window.location.href = "/login.html";
+} else {
+    fetch("http://localhost:8080/vald", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`  // Send the token to the validation endpoint
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // If token is valid, allow access to the page
+            //alert(`Token is valid: ${jwtToken}`);
+            // Proceed with loading the homepage content if needed
+        } else {
+            // If token is invalid, redirect to login page
+            alert("Invalid token, please login again.");
+            window.location.href = "/login.html";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred, please login again.");
+        window.location.href = "/login.html";
+    });
+}
+
+
+
+
+    document.getElementById("edit-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const interests = [];
+        document.querySelectorAll(".interests input[type=checkbox]:checked").forEach((checkbox) => {
+            interests.push(checkbox.value);
+        });
+
+        const userData = {
+            password: document.getElementById("password").value,
+            age: document.getElementById("age").value,
+            interests: interests
+        };
+
+        const requestOptions = {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem('jwtToken')}`
+            },
+            body: JSON.stringify(userData),
+            redirect: "follow"
+        };
+
+        const username = sessionStorage.getItem('username');
+
+        fetch(`http://localhost:8080/edit?username=${encodeURIComponent(username)}`, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((result) => {
+                alert("User updated successfully!");
+                window.location.href = "/homepage.html";
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Update failed.");
+            });
+    });
+    
+function goToHome() {
+	window.location.href = "/homepage.html";
+}
+</script>
+
+</body>
+</html>
