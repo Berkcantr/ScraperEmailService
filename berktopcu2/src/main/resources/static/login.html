@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Log In</h2>
+        <form id="login-form">
+            <input type="text" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="submit-btn">Log In</button>
+        </form>
+    </div>
+
+<script>
+document.getElementById("login-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const userData = {
+        username: document.getElementById("email").value,
+        password: document.getElementById("password").value
+    };
+
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+        redirect: "follow"
+    };
+
+    fetch("http://localhost:8080/auth", requestOptions)
+        .then(response => {
+            if (response.ok) {
+                return response.json();  // Parse the response only if status is 200 (successful)
+            } else {
+                throw new Error("Login failed");
+            }
+        })
+        .then(responseData => {
+            const responseString = responseData.response;
+            const tokenPrefix = "Successful authentication using ";
+            
+            // Check if the response contains the token prefix
+            if (responseString.startsWith(tokenPrefix)) {
+                let token = responseString.substring(tokenPrefix.length).trim();
+
+                // Clean the token from any unwanted characters at the end
+                if (token.endsWith('"}')) {
+                    token = token.slice(0, -2);
+                }
+
+                // JWT structure check: must have two periods to be a valid JWT
+                const tokenParts = token.split('.');
+                if (tokenParts.length === 3) {
+                    // Store token and username in sessionStorage
+                    sessionStorage.setItem('jwtToken', token);
+                    sessionStorage.setItem('username', userData.username);
+
+                    alert("Login successful!");
+                    window.location.href = "/homepage.html";
+                } else {
+                    throw new Error("Invalid JWT token format.");
+                }
+            } else {
+                throw new Error("Invalid credentials: " + responseString);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Login failed. Please check your credentials.");
+        });
+});
+</script>
+</body>
+</html>
+
