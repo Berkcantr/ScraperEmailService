@@ -67,12 +67,7 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-   */
-/* Fix email button to take user to login.html
- * Edit users service works, implement edit.html to appear after homepage.html
- * implement log collector
- * 
- */
+*/
     
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -83,13 +78,13 @@ public class SecurityConfiguration {
                 //.requestMatchers("/homepage.html").authenticated()  // Restrict homepage to authenticated users
                 .anyRequest().authenticated()
             )
-            /*.formLogin()
+            .formLogin()
                 .loginPage("/homepage.html")
                 .permitAll()
             .and()
             .logout()
                 .permitAll()
-            .and()*/
+            .and()
             .authenticationProvider(authenticationProvider())  
             .addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);  
 

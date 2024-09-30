@@ -57,7 +57,7 @@ public class WorldNewsScraper {
                 fullContent.append(p.text()).append("\n");
             }
             
-            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.WORLD_NEWS);
+            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.WORLD_NEWS, null);
             System.out.println(article1.toString());
             
             System.out.println("////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////");

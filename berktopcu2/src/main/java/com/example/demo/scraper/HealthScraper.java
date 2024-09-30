@@ -57,7 +57,7 @@ public class HealthScraper {
                 fullContent.append(p.text()).append("\n");
             }
             
-            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.HEALTH);
+            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.HEALTH, null);
             System.out.println(article1.toString());
             
             System.out.println("////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////");

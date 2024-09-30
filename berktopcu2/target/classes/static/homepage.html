@@ -150,11 +150,8 @@ if (!jwtToken) {
     })
     .then(response => {
         if (response.ok) {
-            // If token is valid, allow access to the page
             //alert(`Token is valid: ${jwtToken}`);
-            // Proceed with loading the homepage content if needed
         } else {
-            // If token is invalid, redirect to login page
             alert("Invalid token, please login again.");
             window.location.href = "/login.html";
         }
@@ -188,7 +185,6 @@ function fetchArticles() {
             const card = document.createElement('div');
             card.classList.add('card');
 
-            // Only image and title now
             if (article.image) {
                 const image = document.createElement('img');
                 image.src = article.image;

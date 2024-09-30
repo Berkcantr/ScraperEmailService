@@ -25,7 +25,7 @@ public class EmailScheduler {
     @Autowired
     private EmailService emailService;
 
-    @Scheduled(cron = "0 19 11 * * ?")  
+    @Scheduled(cron = "0 20 11 * * ?")  
     public void sendDailyEmails() throws IOException {
     	List<String> userEmails = userService.getAllUserEmails();
 

@@ -163,16 +163,13 @@ if (!jwtToken) {
     fetch("http://localhost:8080/vald", {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${jwtToken}`  // Send the token to the validation endpoint
+            "Authorization": `Bearer ${jwtToken}`
         }
     })
     .then(response => {
-        if (response.ok) {
-            // If token is valid, allow access to the page
+        if (response.ok) {       
             //alert(`Token is valid: ${jwtToken}`);
-            // Proceed with loading the homepage content if needed
         } else {
-            // If token is invalid, redirect to login page
             alert("Invalid token, please login again.");
             window.location.href = "/login.html";
         }

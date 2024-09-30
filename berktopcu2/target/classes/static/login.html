@@ -85,7 +85,7 @@ document.getElementById("login-form").addEventListener("submit", function(event)
     fetch("http://localhost:8080/auth", requestOptions)
         .then(response => {
             if (response.ok) {
-                return response.json();  // Parse the response only if status is 200 (successful)
+                return response.json();
             } else {
                 throw new Error("Login failed");
             }
@@ -94,19 +94,18 @@ document.getElementById("login-form").addEventListener("submit", function(event)
             const responseString = responseData.response;
             const tokenPrefix = "Successful authentication using ";
             
-            // Check if the response contains the token prefix
+           
             if (responseString.startsWith(tokenPrefix)) {
                 let token = responseString.substring(tokenPrefix.length).trim();
 
-                // Clean the token from any unwanted characters at the end
                 if (token.endsWith('"}')) {
                     token = token.slice(0, -2);
                 }
 
-                // JWT structure check: must have two periods to be a valid JWT
+
                 const tokenParts = token.split('.');
                 if (tokenParts.length === 3) {
-                    // Store token and username in sessionStorage
+                   
                     sessionStorage.setItem('jwtToken', token);
                     sessionStorage.setItem('username', userData.username);
 

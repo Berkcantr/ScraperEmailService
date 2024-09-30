@@ -16,7 +16,7 @@ public class TechnologyScraper {
 
 	public static void main(String[] args) {
 		
-	        String homepageUrl = "https://www.ntv.com.tr/teknoloji";  // Change this to the actual page URL
+	        String homepageUrl = "https://www.ntv.com.tr/teknoloji";  // change this to for each scraper
 	        
 	        try {
 
@@ -37,7 +37,6 @@ public class TechnologyScraper {
 	        System.out.println("hello");
 	    }
     
-    //print news. If statements go here:
     private static void scrapeArticle(String url) {
         try {
             Document articleDocument = Jsoup.connect(url).get();
@@ -53,7 +52,7 @@ public class TechnologyScraper {
                 fullContent.append(p.text()).append("\n");
             }
             
-            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.TECHNOLOGY);
+            ArticleModel article1 = new ArticleModel(url, header, fullContent.toString().trim(), Interest.TECHNOLOGY, null);
             System.out.println(article1.toString());
             
             System.out.println("////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////\n////////////////////////////////////////////////////////////////////////////////////////////");

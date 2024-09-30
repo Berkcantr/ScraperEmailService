@@ -33,7 +33,7 @@ public class JwtUtils {
 	
 	private String createToken(Map<String, Object> claims, String subject) {
 		Date now = new Date(System.currentTimeMillis());
-		Date until = new Date(System.currentTimeMillis() + 1 * 60 * 1000);  // change the time with the numbers here
+		Date until = new Date(System.currentTimeMillis() + 20 * 60 * 1000);  // change the time with the numbers here
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now).setExpiration(until)
 				.signWith(SECRET_KEY).compact();
 	}
@@ -58,13 +58,7 @@ public class JwtUtils {
 	private Boolean isTokenExpired(String token) {
 		return extractExpiration(token).before(new Date());
 	}
-	/* 
-	 * 
-	 * fix login logic to prevent false succesful login only to be returned to login from homepage
-	 * 
-	 * Start on the article DB table, how they are displayed on the homepage, 
-	 * 
-	 */
+
 	
 	
 }

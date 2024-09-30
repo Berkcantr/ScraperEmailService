@@ -23,12 +23,12 @@ public class BlogScraper {
     @Autowired
     private ArticleService articleService;
 
-    // Method to initiate the scraping process
+
     public void scrapeAndStoreArticles() {
         String homepageUrl = "https://www.patiliyo.com/";
         String append = "https://www.patiliyo.com";
         try {
-            // Fetch the homepage and extract article URLs
+            
             Document homepageDocument = Jsoup.connect(homepageUrl).get();
             Elements articleLinks = homepageDocument.select("div.vk-section1-eco-title a");
 
@@ -52,28 +52,25 @@ public class BlogScraper {
         }
     }
 
-    // Method to scrape and save an individual article
+
     private void scrapeAndSaveArticle(String url) {
         try {
-            // Fetch the article content using the provided URL
+           
             Document articleDocument = Jsoup.connect(url).get();
             Elements articleContent = articleDocument.select(".col-md-8");
 
-            // Extract the title, content, and other fields
             String header = articleContent.select("h1.entry-title").text();
-            String content = articleContent.select("h2.spot").text(); // Adjust if needed
+            String content = articleContent.select("h2.spot").text(); 
 
-            // Extract full article content (all paragraphs)
+            
             StringBuilder fullContent = new StringBuilder();
             articleContent.select("p").forEach(p -> fullContent.append(p.text()).append("\n"));
 
-            // Optionally extract an image URL (uncomment if image is available)
-            String imageUrl = articleContent.select("img").attr("src");  // Adjust the selector
 
-            // Check if the article already exists in the DB to avoid duplicates
+            String imageUrl = articleContent.select("img").attr("src");
+
             if (articleService.findArticle(url) == null) {
-                // Create and save the article in the database
-                ArticleModel articleModel = new ArticleModel(url, header, fullContent.toString().trim(), Interest.SPORTS, imageUrl);
+                ArticleModel articleModel = new ArticleModel(url, header, fullContent.toString().trim(), Interest.BLOGS, imageUrl);
                 articleService.addArticle(articleModel);
                 System.out.println("Saved article: " + header);
             } else {

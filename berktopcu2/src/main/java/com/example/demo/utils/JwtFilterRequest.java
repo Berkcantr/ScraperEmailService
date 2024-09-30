@@ -27,7 +27,6 @@ public class JwtFilterRequest extends OncePerRequestFilter {
 	@Autowired
 	private UserService userService;
 	
-	//https://www.youtube.com/watch?v=OxyBRjGfJsk 13:--
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		String authorizationHeader = request.getHeader("Authorization");

@@ -51,15 +51,8 @@ public class UserService implements UserDetailsService {
         }
     }
 	
-	
-	
-	
-	
 	public List<String> getAllUserEmails() {
-        return userRepository.findAll()
-                             .stream()
-                             .map(UserModel::getUsername)
-                             .collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserModel::getUsername).collect(Collectors.toList());
     }
 	
 	
