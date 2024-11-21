@@ -33,7 +33,7 @@ public class JwtUtils {
 	
 	private String createToken(Map<String, Object> claims, String subject) {
 		Date now = new Date(System.currentTimeMillis());
-		Date until = new Date(System.currentTimeMillis() + 1000 * 80 * 40 * 20);
+		Date until = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now).setExpiration(until)
 				.signWith(SECRET_KEY).compact();
 	}

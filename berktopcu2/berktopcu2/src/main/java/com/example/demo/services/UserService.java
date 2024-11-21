@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -28,7 +29,7 @@ public class UserService implements UserDetailsService {
 		String name = foundUser.getUsername();
 		String password = foundUser.getPassword();
 		int age = foundUser.getAge();
-		Interest interest = foundUser.getInterest();
+		List<Interest> interest = foundUser.getInterests();
 		
 		
 		return new User(name, password, new ArrayList<>());

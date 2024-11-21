@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,13 +42,15 @@ public class AuthController {
 		String username = authenticationRequest.getUsername();
 		String password = authenticationRequest.getPassword();
 		int age = authenticationRequest.getAge();
-		Interest interest = authenticationRequest.getInterest();
+		//Interest interest = authenticationRequest.getInterest();
+		List<Interest> interests = authenticationRequest.getInterests();
 		
 		UserModel userModel = new UserModel();
 		userModel.setUsername(username);
 		userModel.setPassword(password);
 		userModel.setAge(age);
-		userModel.setInterest(interest);
+		userModel.setInterests(interests);
+		
 		
 		try {
 			userRepository.save(userModel);
